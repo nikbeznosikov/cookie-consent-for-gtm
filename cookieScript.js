@@ -232,6 +232,12 @@
     location.reload(); // Refresh the page to remove scripts
   }
 
+  // Attach functions to the window object to make them accessible
+  window.createSettingsModal = createSettingsModal;
+  window.closeSettingsModal = closeSettingsModal;
+  window.acceptAllCookies = acceptAllCookies;
+  window.rejectAllCookies = rejectAllCookies;
+
   // Load styles, create the banner, and apply saved preferences on window load
   window.addEventListener('load', () => {
     loadCookieStyles();
