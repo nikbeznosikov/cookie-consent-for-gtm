@@ -1,0 +1,201 @@
+/* General styles for the cookie consent banner */
+.cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #f4f4f4;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: Arial, sans-serif;
+  font-size: 14px;
+  color: #333;
+}
+
+.cookie-banner p {
+  margin: 0;
+  padding: 0 10px 0 0;
+  flex: 1;
+}
+
+.cookie-banner p a {
+  color: blue;
+  text-decoration: underline;
+}
+
+.cookie-banner .cookie-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.cookie-banner button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.cookie-banner .accept-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.cookie-banner .reject-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.cookie-banner .settings-btn {
+  background-color: #ffc107;
+  color: #333;
+}
+
+.cookie-banner button:hover {
+  opacity: 0.9;
+}
+
+/* Styles for the cookie settings modal */
+.cookie-settings-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.cookie-settings-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+
+.cookie-settings-content {
+  position: relative;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  padding: 20px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+}
+
+.cookie-settings-content h2 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.cookie-settings-content h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.cookie-settings-content p {
+  font-size: 14px;
+  margin-bottom: 20px;
+  color: #555;
+}
+
+.cookie-settings-content button {
+  margin: 5px;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.cookie-settings-content .save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.cookie-settings-content .close-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.cookie-settings-content button:hover {
+  opacity: 0.9;
+}
+
+.cookie-settings-content .cookie-category {
+  text-align: left;
+  margin-bottom: 15px;
+}
+
+.cookie-settings-content .cookie-category input[type='checkbox'] {
+  margin-right: 10px;
+}
+
+.cookie-settings-content .cookie-category label {
+  font-weight: bold;
+  color: #333;
+}
+
+.cookie-settings-content .cookie-category p {
+  margin: 5px 0 0 25px;
+  font-size: 12px;
+  color: #666;
+}
+
+.cookie-settings-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  width: 40px;
+  height: 40px;
+  background-color: #ffc107;
+  border: none;
+  border-radius: 50%;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  color: #333;
+  z-index: 1000;
+}
+
+.cookie-settings-button:hover {
+  opacity: 0.9;
+}
+
+/* Mobile styles for the cookie banner */
+@media (max-width: 600px) {
+  .cookie-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
+
+  .cookie-banner p {
+    padding: 0;
+    margin-bottom: 10px;
+  }
+
+  .cookie-banner .cookie-buttons {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .cookie-banner button {
+    flex: 1;
+    margin: 0 5px;
+  }
+}
