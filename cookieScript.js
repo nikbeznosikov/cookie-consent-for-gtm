@@ -2,7 +2,7 @@
 function loadCookieStyles() {
   const link = document.createElement('link');
   link.rel = 'stylesheet';
-  link.href = 'cookieStyles.css';
+  link.href = 'https://cookie-consent-for-gtm.pages.dev/cookieStyles.css';
   document.head.appendChild(link);
 
   // Load FontAwesome for the cookie icon
