@@ -86,6 +86,123 @@
     return null;
   }
 
+  // Function to delete a cookie
+  function deleteCookie(name) {
+    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+  }
+
+  // Function to delete cookies by category
+  function deleteCookiesByCategory(category) {
+    const cookiesToDelete = {
+      analytics: [
+        '_ga',
+        '_gid',
+        '_gat',
+        'AMP_TOKEN',
+        '_gac_',
+        '_utm',
+        '_clck',
+        '_clsk',
+        '_hjSession_',
+        '_hjIncludedInSample',
+        'ajs_anonymous_id',
+        'ajs_group_id',
+        'ajs_user_id',
+        's_cc',
+        's_sq',
+        's_vi',
+        's_fid',
+        's_nr',
+        's_lv',
+        's_vnum',
+        's_depth',
+        's_invisit',
+        's_ppv',
+        '_pk_id.',
+        '_pk_ses.',
+        '_pk_ref.',
+        '_pk_cvar.',
+        'piwik_ignore',
+        'MATOMO_SESSID',
+        '__utma',
+        '__utmb',
+        '__utmc',
+        '__utmt',
+        '__utmz',
+        '__utmv',
+        '__utmx',
+        '__utmxx',
+        '_gaexp',
+        '_opt_awcid',
+        '_opt_awmid',
+        '_opt_awgid',
+        '_opt_awkid',
+        '_opt_utmc',
+      ],
+      marketing: [
+        '_fbp',
+        'fr',
+        '_gcl_au',
+        '_uetsid',
+        '_uetvid',
+        'IDE',
+        'test_cookie',
+        '__kla_id',
+        '_lc2_fpi',
+        '_li',
+        'bscookie',
+        'UserMatchHistory',
+        'li_sugr',
+        'lidc',
+        'lang',
+        'bcookie',
+        'personalization_id',
+        'guest_id',
+        'external_referer',
+        'auth_token',
+        'twid',
+        'ct0',
+        'remember_checked_on',
+        'datr',
+        'sb',
+        'locale',
+        'wd',
+        'c_user',
+        'xs',
+        'pl',
+        'presence',
+        'act',
+        'spin',
+        'NID',
+        '1P_JAR',
+        'ANID',
+        'CONSENT',
+        'DV',
+        'OGPC',
+        'OTZ',
+        'APISID',
+        'HSID',
+        'SAPISID',
+        'SID',
+        'SSID',
+      ],
+      functional: ['language', 'theme', 'currency', 'user_preferences'],
+    };
+
+    const cookies = cookiesToDelete[category];
+    if (cookies) {
+      const allCookies = document.cookie.split(';');
+      allCookies.forEach((cookie) => {
+        const cookieName = cookie.split('=')[0].trim();
+        cookies.forEach((cookieToDelete) => {
+          if (cookieName.includes(cookieToDelete)) {
+            deleteCookie(cookieName);
+          }
+        });
+      });
+    }
+  }
+
   // Function to log consent preferences
   function logConsent(preferences) {
     const logEntry = {
@@ -120,7 +237,13 @@
     dataLayer.push({ event: 'analytics_' + (analyticsCookies ? 'accepted' : 'rejected') });
     dataLayer.push({ event: 'marketing_' + (marketingCookies ? 'accepted' : 'rejected') });
     dataLayer.push({ event: 'functional_' + (functionalCookies ? 'accepted' : 'rejected') });
-    closeSettingsModal(); // Close modal and reload the page
+
+    // Delete cookies by category if not accepted
+    if (!analyticsCookies) deleteCookiesByCategory('analytics');
+    if (!marketingCookies) deleteCookiesByCategory('marketing');
+    if (!functionalCookies) deleteCookiesByCategory('functional');
+
+    closeSettingsModal();
   }
 
   // Function to apply saved cookie preferences
@@ -157,6 +280,13 @@
     } else {
       dataLayer.push({ event: 'functional_rejected' });
     }
+
+    // Run deleteCookiesByCategory as an interval every 1 second
+    setInterval(() => {
+      if (!analyticsCookies) deleteCookiesByCategory('analytics');
+      if (!marketingCookies) deleteCookiesByCategory('marketing');
+      if (!functionalCookies) deleteCookiesByCategory('functional');
+    }, 1000);
   }
 
   // Function to create the cookie banner
@@ -226,6 +356,12 @@
     dataLayer.push({ event: 'analytics_rejected' });
     dataLayer.push({ event: 'marketing_rejected' });
     dataLayer.push({ event: 'functional_rejected' });
+
+    // Delete cookies by category
+    deleteCookiesByCategory('analytics');
+    deleteCookiesByCategory('marketing');
+    deleteCookiesByCategory('functional');
+
     const banner = document.querySelector('.cookie-banner');
     if (banner) banner.remove();
     createCookieSettingsButton();
