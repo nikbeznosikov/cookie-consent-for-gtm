@@ -3,14 +3,8 @@
   function loadCookieStyles() {
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'https://cookie-consent-for-gtm.pages.dev/cookieStyles.css';
+    link.href = './cookieStyles.css';
     document.head.appendChild(link);
-
-    // Load FontAwesome for the cookie icon
-    const fontAwesomeLink = document.createElement('link');
-    fontAwesomeLink.rel = 'stylesheet';
-    fontAwesomeLink.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css';
-    document.head.appendChild(fontAwesomeLink);
   }
 
   // Function to create the settings modal
