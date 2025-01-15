@@ -235,6 +235,7 @@
   // Attach functions to the window object to make them accessible
   window.createSettingsModal = createSettingsModal;
   window.closeSettingsModal = closeSettingsModal;
+  window.saveCookiePreferences = saveCookiePreferences;
   window.acceptAllCookies = acceptAllCookies;
   window.rejectAllCookies = rejectAllCookies;
 
