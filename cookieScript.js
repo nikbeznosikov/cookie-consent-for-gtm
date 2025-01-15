@@ -308,7 +308,6 @@
   function createCookieSettingsButton() {
     const buttonTemplate = `
     <button class="cookie-settings-button" onclick="createSettingsModal()" title="Cookie Settings">
-      <i class="fas fa-cookie-bite"></i>
     </button>
   `;
     document.body.insertAdjacentHTML('beforeend', buttonTemplate);
