@@ -282,10 +282,12 @@
       dataLayer.push({ event: 'functional_rejected' });
     }
 
-    // Delete cookies by category if not accepted
-    if (!analyticsCookies) deleteCookiesByCategory('analytics');
-    if (!marketingCookies) deleteCookiesByCategory('marketing');
-    if (!functionalCookies) deleteCookiesByCategory('functional');
+    // Run deleteCookiesByCategory as an interval every 1 second
+    setInterval(() => {
+      if (!analyticsCookies) deleteCookiesByCategory('analytics');
+      if (!marketingCookies) deleteCookiesByCategory('marketing');
+      if (!functionalCookies) deleteCookiesByCategory('functional');
+    }, 1000);
   }
 
   // Function to create the cookie banner
@@ -381,16 +383,6 @@
 
     applyCookiePreferences(); // Notify GTM of the current cookie status
   }
-
-  setInterval(() => {
-    const analyticsCookies = getCookie('analyticsCookies') === 'true';
-    const marketingCookies = getCookie('marketingCookies') === 'true';
-    const functionalCookies = getCookie('functionalCookies') === 'true';
-
-    if (!analyticsCookies) deleteCookiesByCategory('analytics');
-    if (!marketingCookies) deleteCookiesByCategory('marketing');
-    if (!functionalCookies) deleteCookiesByCategory('functional');
-  }, 1000);
 
   // Attach functions to the window object for accessibility
   window.createSettingsModal = createSettingsModal;
