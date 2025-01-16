@@ -282,12 +282,10 @@
       dataLayer.push({ event: 'functional_rejected' });
     }
 
-    // Run deleteCookiesByCategory as an interval every 1 second
-    setInterval(() => {
-      if (!analyticsCookies) deleteCookiesByCategory('analytics');
-      if (!marketingCookies) deleteCookiesByCategory('marketing');
-      if (!functionalCookies) deleteCookiesByCategory('functional');
-    }, 1000);
+    // Delete cookies by category if not accepted
+    if (!analyticsCookies) deleteCookiesByCategory('analytics');
+    if (!marketingCookies) deleteCookiesByCategory('marketing');
+    if (!functionalCookies) deleteCookiesByCategory('functional');
   }
 
   // Function to create the cookie banner
