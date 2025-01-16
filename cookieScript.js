@@ -132,6 +132,9 @@
         '_opt_awgid',
         '_opt_awkid',
         '_opt_utmc',
+        '_vwo',
+        '_ga',
+        '_wingify',
       ],
       marketing: [
         '_fbp',
