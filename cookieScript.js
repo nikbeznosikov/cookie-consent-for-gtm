@@ -368,23 +368,29 @@
     location.reload(); // Refresh the page to remove scripts
   }
 
-  // Attach functions to the window object to make them accessible
+  // Function to initialize the script
+  function initializeCookieScript() {
+    console.log('Initializing Cookie Script');
+
+    loadCookieStyles();
+    const cookieSettingsSaved = getCookie('cookieSettingsSaved') === 'true';
+
+    if (cookieSettingsSaved) {
+      createCookieSettingsButton();
+    } else {
+      createCookieBanner();
+    }
+
+    applyCookiePreferences(); // Notify GTM of the current cookie status
+  }
+
+  // Attach functions to the window object for accessibility
   window.createSettingsModal = createSettingsModal;
   window.closeSettingsModal = closeSettingsModal;
   window.saveCookiePreferences = saveCookiePreferences;
   window.acceptAllCookies = acceptAllCookies;
   window.rejectAllCookies = rejectAllCookies;
 
-  // Load styles, create the banner, and apply saved preferences on window load
-  window.addEventListener('load', () => {
-    console.log('Window Loaded');
-    loadCookieStyles();
-    const cookieSettingsSaved = getCookie('cookieSettingsSaved') === 'true';
-    if (cookieSettingsSaved) {
-      createCookieSettingsButton();
-    } else {
-      createCookieBanner();
-    }
-    applyCookiePreferences(); // Notify GTM of the current cookie status
-  });
+  // Call the initialization function directly
+  initializeCookieScript();
 })();
