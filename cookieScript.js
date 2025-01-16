@@ -135,6 +135,7 @@
         '_vwo',
         '_ga',
         '_wingify',
+        '_vis',
       ],
       marketing: [
         '_fbp',
@@ -182,6 +183,7 @@
         'SAPISID',
         'SID',
         'SSID',
+        '__nbpix',
       ],
       functional: ['language', 'theme', 'currency', 'user_preferences'],
     };
