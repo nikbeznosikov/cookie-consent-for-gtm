@@ -1,4 +1,5 @@
 (function () {
+  console.log('Cookie Script Loaded');
   // Function to dynamically load the styles
   function loadCookieStyles() {
     const link = document.createElement('link');
@@ -376,6 +377,7 @@
 
   // Load styles, create the banner, and apply saved preferences on window load
   window.addEventListener('load', () => {
+    console.log('Window Loaded');
     loadCookieStyles();
     const cookieSettingsSaved = getCookie('cookieSettingsSaved') === 'true';
     if (cookieSettingsSaved) {
