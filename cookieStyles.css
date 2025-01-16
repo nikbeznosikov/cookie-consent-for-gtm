@@ -115,17 +115,16 @@
   color: #333;
   font-family: Arial, sans-serif;
   margin-top: 0;
-  margin-bottom: 12px;
   padding: 0;
 }
 
 .cookie-settings-content h3 {
-  font-size: 16px;
   margin-bottom: 10px;
+  margin-top: 10px;
+  padding: 0;
+  font-size: 16px;
   color: #333;
   font-family: Arial, sans-serif;
-  margin-bottom: 10px;
-  padding: 0;
 }
 
 .cookie-settings-content p {
