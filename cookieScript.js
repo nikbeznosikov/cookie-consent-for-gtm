@@ -47,6 +47,7 @@
 
         <button class="save-btn" onclick="saveCookiePreferences()">Save Preferences</button>
         <button class="close-btn" onclick="closeSettingsModal()">Close</button>
+        <p><a href="/cookie-policy.html" target="_blank">Cookie Policy</a></p>
       </div>
     </div>
   `;
