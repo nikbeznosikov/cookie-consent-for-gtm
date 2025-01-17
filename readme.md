@@ -23,6 +23,8 @@ Add the following to your HTML to include the script and styles:
 
 ```
 
+Make sure to include the script and styles in the `<head>` section of your HTML before the GTM script.
+
 ### 2\. Google Tag Manager Integration
 
 This script sends events to the `dataLayer` based on user consent preferences:
