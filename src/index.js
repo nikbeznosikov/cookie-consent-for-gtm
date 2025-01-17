@@ -6,9 +6,9 @@ import Cookies from 'js-cookie';
 
   // Function to create the settings modal
   function createSettingsModal() {
-    const analyticsCookies = getCookie('analyticsCookies') === 'true';
-    const marketingCookies = getCookie('marketingCookies') === 'true';
-    const functionalCookies = getCookie('functionalCookies') === 'true';
+    const analyticsCookies = Cookies.get('analyticsCookies') === 'true';
+    const marketingCookies = Cookies.get('marketingCookies') === 'true';
+    const functionalCookies = Cookies.get('functionalCookies') === 'true';
 
     const modalTemplate = `
     <div class="cookie-settings-modal">
@@ -57,26 +57,6 @@ import Cookies from 'js-cookie';
     if (modal) modal.remove();
     // eslint-disable-next-line no-restricted-globals
     location.reload();
-  }
-
-  // Function to set a cookie
-  function setCookie(name, value, days) {
-    const date = new Date();
-    date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
-    const expires = 'expires=' + date.toUTCString();
-    document.cookie = name + '=' + value + ';' + expires + ';path=/';
-  }
-
-  // Function to get a cookie
-  function getCookie(name) {
-    const nameEQ = name + '=';
-    const ca = document.cookie.split(';');
-    for (let i = 0; i < ca.length; i++) {
-      let c = ca[i];
-      while (c.charAt(0) == ' ') c = c.substring(1, c.length);
-      if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
-    }
-    return null;
   }
 
   // Function to delete a cookie
@@ -235,10 +215,10 @@ import Cookies from 'js-cookie';
     const marketingCookies = document.getElementById('marketing-cookies').checked;
     const functionalCookies = document.getElementById('functional-cookies').checked;
 
-    setCookie('analyticsCookies', analyticsCookies, 365);
-    setCookie('marketingCookies', marketingCookies, 365);
-    setCookie('functionalCookies', functionalCookies, 365);
-    setCookie('cookieSettingsSaved', true, 365);
+    Cookies.set('analyticsCookies', analyticsCookies, { expires: 365, path: '/' });
+    Cookies.set('marketingCookies', marketingCookies, { expires: 365, path: '/' });
+    Cookies.set('functionalCookies', functionalCookies, { expires: 365, path: '/' });
+    Cookies.set('cookieSettingsSaved', true, { expires: 365, path: '/' });
 
     const preferences = {
       analyticsCookies,
@@ -262,9 +242,9 @@ import Cookies from 'js-cookie';
 
   // Function to apply saved cookie preferences
   function applyCookiePreferences() {
-    const analyticsCookies = getCookie('analyticsCookies') === 'true';
-    const marketingCookies = getCookie('marketingCookies') === 'true';
-    const functionalCookies = getCookie('functionalCookies') === 'true';
+    const analyticsCookies = Cookies.get('analyticsCookies') === 'true';
+    const marketingCookies = Cookies.get('marketingCookies') === 'true';
+    const functionalCookies = Cookies.get('functionalCookies') === 'true';
 
     const preferences = {
       analyticsCookies,
@@ -303,9 +283,9 @@ import Cookies from 'js-cookie';
   }
 
   setInterval(() => {
-    const analyticsCookies = getCookie('analyticsCookies') === 'true';
-    const marketingCookies = getCookie('marketingCookies') === 'true';
-    const functionalCookies = getCookie('functionalCookies') === 'true';
+    const analyticsCookies = Cookies.get('analyticsCookies') === 'true';
+    const marketingCookies = Cookies.get('marketingCookies') === 'true';
+    const functionalCookies = Cookies.get('functionalCookies') === 'true';
 
     if (!analyticsCookies) deleteCookiesByCategory('analytics');
     if (!marketingCookies) deleteCookiesByCategory('marketing');
@@ -338,10 +318,10 @@ import Cookies from 'js-cookie';
 
   // Function to accept all cookies
   function acceptAllCookies() {
-    setCookie('analyticsCookies', true, 365);
-    setCookie('marketingCookies', true, 365);
-    setCookie('functionalCookies', true, 365);
-    setCookie('cookieSettingsSaved', true, 365);
+    Cookies.set('analyticsCookies', true, { expires: 365, path: '/' });
+    Cookies.set('marketingCookies', true, { expires: 365, path: '/' });
+    Cookies.set('functionalCookies', true, { expires: 365, path: '/' });
+    Cookies.set('cookieSettingsSaved', true, { expires: 365, path: '/' });
 
     const preferences = {
       analyticsCookies: true,
@@ -362,10 +342,10 @@ import Cookies from 'js-cookie';
 
   // Function to reject all cookies
   function rejectAllCookies() {
-    setCookie('analyticsCookies', false, 365);
-    setCookie('marketingCookies', false, 365);
-    setCookie('functionalCookies', false, 365);
-    setCookie('cookieSettingsSaved', true, 365);
+    Cookies.set('analyticsCookies', false, { expires: 365, path: '/' });
+    Cookies.set('marketingCookies', false, { expires: 365, path: '/' });
+    Cookies.set('functionalCookies', false, { expires: 365, path: '/' });
+    Cookies.set('cookieSettingsSaved', true, { expires: 365, path: '/' });
 
     const preferences = {
       analyticsCookies: false,
@@ -393,7 +373,7 @@ import Cookies from 'js-cookie';
   // Function to initialize the script
   function initializeCookieScript() {
     console.log('Initializing Cookie Script');
-    const cookieSettingsSaved = getCookie('cookieSettingsSaved') === 'true';
+    const cookieSettingsSaved = Cookies.get('cookieSettingsSaved') === 'true';
 
     if (cookieSettingsSaved) {
       createCookieSettingsButton();
