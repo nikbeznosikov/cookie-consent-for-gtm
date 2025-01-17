@@ -1,3 +1,4 @@
+import './css/styles.css';
 import Cookies from 'js-cookie';
 
 (function () {
