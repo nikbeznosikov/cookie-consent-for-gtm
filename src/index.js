@@ -75,6 +75,7 @@ import Cookies from 'js-cookie';
       rootDomain = domainParts.join('.');
     }
 
+    // Delete the cookie from the root domain and the current domain
     Cookies.remove(name, { path: '/', domain: rootDomain });
     Cookies.remove(name);
   }
