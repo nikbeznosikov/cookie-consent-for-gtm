@@ -1,5 +1,3 @@
-import './css/styles.css';
-
 (function () {
   console.log('Cookie Script Loaded');
   window.dataLayer = window.dataLayer || [];
