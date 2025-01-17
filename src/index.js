@@ -4,11 +4,18 @@ import Cookies from 'js-cookie';
   console.log('Cookie Script Loaded');
   window.dataLayer = window.dataLayer || [];
 
+  // Helper function to get cookie preferences
+  function getCookiePreferences() {
+    return {
+      analyticsCookies: Cookies.get('analyticsCookies') === 'true',
+      marketingCookies: Cookies.get('marketingCookies') === 'true',
+      functionalCookies: Cookies.get('functionalCookies') === 'true',
+    };
+  }
+
   // Function to create the settings modal
   function createSettingsModal() {
-    const analyticsCookies = Cookies.get('analyticsCookies') === 'true';
-    const marketingCookies = Cookies.get('marketingCookies') === 'true';
-    const functionalCookies = Cookies.get('functionalCookies') === 'true';
+    const { analyticsCookies, marketingCookies, functionalCookies } = getCookiePreferences();
 
     const modalTemplate = `
     <div class="cookie-settings-modal">
@@ -55,26 +62,18 @@ import Cookies from 'js-cookie';
   function closeSettingsModal() {
     const modal = document.querySelector('.cookie-settings-modal');
     if (modal) modal.remove();
-    // eslint-disable-next-line no-restricted-globals
     location.reload();
   }
 
   // Function to delete a cookie
   function deleteCookie(name) {
-    // Get the current domain from the location
     const domainParts = location.hostname.split('.');
-
-    // Remove the first part of the domain (subdomain) for root domain deletion
-    let rootDomain = location.hostname; // Default to the current domain
+    let rootDomain = location.hostname;
     if (domainParts.length > 2) {
-      domainParts.shift(); // Remove the subdomain
-      rootDomain = '.' + domainParts.join('.'); // Construct the root domain
+      domainParts.shift();
+      rootDomain = '.' + domainParts.join('.');
     }
-
-    // Delete the cookie for the current domain
     Cookies.remove(name, { path: '/', domain: location.hostname });
-
-    // Delete the cookie for the root domain (if applicable)
     Cookies.remove(name, { path: '/', domain: rootDomain });
   }
 
@@ -209,30 +208,36 @@ import Cookies from 'js-cookie';
     console.log('Consent logged:', logEntry);
   }
 
+  // Function to set cookie preferences
+  function setCookiePreferences(preferences) {
+    Cookies.set('analyticsCookies', preferences.analyticsCookies, { expires: 365, path: '/' });
+    Cookies.set('marketingCookies', preferences.marketingCookies, { expires: 365, path: '/' });
+    Cookies.set('functionalCookies', preferences.functionalCookies, { expires: 365, path: '/' });
+    Cookies.set('cookieSettingsSaved', true, { expires: 365, path: '/' });
+  }
+
+  // Function to notify GTM of cookie preferences
+  function notifyGTM(preferences) {
+    window.dataLayer.push({ event: 'analytics_' + (preferences.analyticsCookies ? 'accepted' : 'rejected') });
+    window.dataLayer.push({ event: 'marketing_' + (preferences.marketingCookies ? 'accepted' : 'rejected') });
+    window.dataLayer.push({
+      event: 'functional_' + (preferences.functionalCookies ? 'accepted' : 'rejected'),
+    });
+  }
+
   // Function to save cookie preferences and reload the page
   function saveCookiePreferences() {
     const analyticsCookies = document.getElementById('analytics-cookies').checked;
     const marketingCookies = document.getElementById('marketing-cookies').checked;
     const functionalCookies = document.getElementById('functional-cookies').checked;
 
-    Cookies.set('analyticsCookies', analyticsCookies, { expires: 365, path: '/' });
-    Cookies.set('marketingCookies', marketingCookies, { expires: 365, path: '/' });
-    Cookies.set('functionalCookies', functionalCookies, { expires: 365, path: '/' });
-    Cookies.set('cookieSettingsSaved', true, { expires: 365, path: '/' });
-
-    const preferences = {
-      analyticsCookies,
-      marketingCookies,
-      functionalCookies,
-    };
-
-    logConsent(preferences); // Log consent here
+    const preferences = { analyticsCookies, marketingCookies, functionalCookies };
+    setCookiePreferences(preferences);
+    logConsent(preferences);
     console.log('Preferences saved');
-    window.dataLayer.push({ event: 'analytics_' + (analyticsCookies ? 'accepted' : 'rejected') });
-    window.dataLayer.push({ event: 'marketing_' + (marketingCookies ? 'accepted' : 'rejected') });
-    window.dataLayer.push({ event: 'functional_' + (functionalCookies ? 'accepted' : 'rejected') });
 
-    // Delete cookies by category if not accepted
+    notifyGTM(preferences);
+
     if (!analyticsCookies) deleteCookiesByCategory('analytics');
     if (!marketingCookies) deleteCookiesByCategory('marketing');
     if (!functionalCookies) deleteCookiesByCategory('functional');
@@ -242,55 +247,17 @@ import Cookies from 'js-cookie';
 
   // Function to apply saved cookie preferences
   function applyCookiePreferences() {
-    const analyticsCookies = Cookies.get('analyticsCookies') === 'true';
-    const marketingCookies = Cookies.get('marketingCookies') === 'true';
-    const functionalCookies = Cookies.get('functionalCookies') === 'true';
+    const preferences = getCookiePreferences();
+    logConsent(preferences);
 
-    const preferences = {
-      analyticsCookies,
-      marketingCookies,
-      functionalCookies,
-    };
+    notifyGTM(preferences);
 
-    logConsent(preferences); // Log consent here
-    if (analyticsCookies) {
-      console.log('Analytics cookies enabled');
-      window.dataLayer.push({ event: 'analytics_accepted' });
-    } else {
-      window.dataLayer.push({ event: 'analytics_rejected' });
-    }
-
-    if (marketingCookies) {
-      console.log('Marketing cookies enabled');
-      window.dataLayer.push({ event: 'marketing_accepted' });
-    } else {
-      window.dataLayer.push({ event: 'marketing_rejected' });
-    }
-
-    if (functionalCookies) {
-      console.log('Functional cookies enabled');
-      window.dataLayer.push({ event: 'functional_accepted' });
-    } else {
-      window.dataLayer.push({ event: 'functional_rejected' });
-    }
-
-    // Run deleteCookiesByCategory as an interval every 1 second
     setInterval(() => {
-      if (!analyticsCookies) deleteCookiesByCategory('analytics');
-      if (!marketingCookies) deleteCookiesByCategory('marketing');
-      if (!functionalCookies) deleteCookiesByCategory('functional');
+      if (!preferences.analyticsCookies) deleteCookiesByCategory('analytics');
+      if (!preferences.marketingCookies) deleteCookiesByCategory('marketing');
+      if (!preferences.functionalCookies) deleteCookiesByCategory('functional');
     }, 1000);
   }
-
-  setInterval(() => {
-    const analyticsCookies = Cookies.get('analyticsCookies') === 'true';
-    const marketingCookies = Cookies.get('marketingCookies') === 'true';
-    const functionalCookies = Cookies.get('functionalCookies') === 'true';
-
-    if (!analyticsCookies) deleteCookiesByCategory('analytics');
-    if (!marketingCookies) deleteCookiesByCategory('marketing');
-    if (!functionalCookies) deleteCookiesByCategory('functional');
-  }, 1000);
 
   // Function to create the cookie banner
   function createCookieBanner() {
@@ -318,48 +285,26 @@ import Cookies from 'js-cookie';
 
   // Function to accept all cookies
   function acceptAllCookies() {
-    Cookies.set('analyticsCookies', true, { expires: 365, path: '/' });
-    Cookies.set('marketingCookies', true, { expires: 365, path: '/' });
-    Cookies.set('functionalCookies', true, { expires: 365, path: '/' });
-    Cookies.set('cookieSettingsSaved', true, { expires: 365, path: '/' });
-
-    const preferences = {
-      analyticsCookies: true,
-      marketingCookies: true,
-      functionalCookies: true,
-    };
-
-    logConsent(preferences); // Log consent here
+    const preferences = { analyticsCookies: true, marketingCookies: true, functionalCookies: true };
+    setCookiePreferences(preferences);
+    logConsent(preferences);
     console.log('Cookies Accepted');
-    window.dataLayer.push({ event: 'analytics_accepted' });
-    window.dataLayer.push({ event: 'marketing_accepted' });
-    window.dataLayer.push({ event: 'functional_accepted' });
+    notifyGTM(preferences);
+
     const banner = document.querySelector('.cookie-banner');
     if (banner) banner.remove();
     createCookieSettingsButton();
-    location.reload(); // Refresh the page to load scripts
+    location.reload();
   }
 
   // Function to reject all cookies
   function rejectAllCookies() {
-    Cookies.set('analyticsCookies', false, { expires: 365, path: '/' });
-    Cookies.set('marketingCookies', false, { expires: 365, path: '/' });
-    Cookies.set('functionalCookies', false, { expires: 365, path: '/' });
-    Cookies.set('cookieSettingsSaved', true, { expires: 365, path: '/' });
-
-    const preferences = {
-      analyticsCookies: false,
-      marketingCookies: false,
-      functionalCookies: false,
-    };
-
-    logConsent(preferences); // Log consent here
+    const preferences = { analyticsCookies: false, marketingCookies: false, functionalCookies: false };
+    setCookiePreferences(preferences);
+    logConsent(preferences);
     console.log('Cookies Rejected');
-    window.dataLayer.push({ event: 'analytics_rejected' });
-    window.dataLayer.push({ event: 'marketing_rejected' });
-    window.dataLayer.push({ event: 'functional_rejected' });
+    notifyGTM(preferences);
 
-    // Delete cookies by category
     deleteCookiesByCategory('analytics');
     deleteCookiesByCategory('marketing');
     deleteCookiesByCategory('functional');
@@ -367,7 +312,7 @@ import Cookies from 'js-cookie';
     const banner = document.querySelector('.cookie-banner');
     if (banner) banner.remove();
     createCookieSettingsButton();
-    location.reload(); // Refresh the page to remove scripts
+    location.reload();
   }
 
   // Function to initialize the script
@@ -381,7 +326,7 @@ import Cookies from 'js-cookie';
       createCookieBanner();
     }
 
-    applyCookiePreferences(); // Notify GTM of the current cookie status
+    applyCookiePreferences();
   }
 
   // Attach functions to the window object for accessibility
@@ -392,7 +337,6 @@ import Cookies from 'js-cookie';
   window.rejectAllCookies = rejectAllCookies;
   window.deleteCookiesByCategory = deleteCookiesByCategory;
 
-  // Call the initialization function directly
   // Ensure the DOM is fully loaded before initializing the script
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeCookieScript);
