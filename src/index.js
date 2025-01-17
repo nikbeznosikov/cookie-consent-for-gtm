@@ -1,3 +1,5 @@
+import Cookies from 'js-cookie';
+
 (function () {
   console.log('Cookie Script Loaded');
   window.dataLayer = window.dataLayer || [];
@@ -77,6 +79,7 @@
     return null;
   }
 
+  // Function to delete a cookie
   function deleteCookie(name) {
     // Get the current domain from the location
     const domainParts = location.hostname.split('.');
@@ -87,11 +90,12 @@
       domainParts.shift(); // Remove the subdomain
       rootDomain = '.' + domainParts.join('.'); // Construct the root domain
     }
+
     // Delete the cookie for the current domain
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${location.hostname}`;
+    Cookies.remove(name, { path: '/', domain: location.hostname });
 
     // Delete the cookie for the root domain (if applicable)
-    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${rootDomain}`;
+    Cookies.remove(name, { path: '/', domain: rootDomain });
   }
 
   // Function to delete cookies by category
