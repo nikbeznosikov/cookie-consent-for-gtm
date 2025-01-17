@@ -72,10 +72,10 @@ import Cookies from 'js-cookie';
     let rootDomain = location.hostname;
     if (domainParts.length > 2) {
       domainParts.shift();
-      rootDomain = '.' + domainParts.join('.');
+      rootDomain = domainParts.join('.');
     }
-    // Cookies.remove(name, { path: '/', domain: location.hostname });
-    // Cookies.remove(name, { path: '/', domain: rootDomain });
+    Cookies.remove(name, { path: '/', domain: location.hostname });
+    Cookies.remove(name, { path: '/', domain: rootDomain });
     Cookies.remove(name);
   }
 
