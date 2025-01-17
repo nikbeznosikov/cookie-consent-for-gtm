@@ -194,7 +194,7 @@
 
 .cookie-settings-button {
   position: fixed;
-  background-image: url('./cookie.png');
+  background-image: url('../img/cookie.png');
   background-repeat: no-repeat;
   background-size: cover;
   bottom: 20px;

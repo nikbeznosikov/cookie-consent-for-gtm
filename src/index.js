@@ -1,14 +1,8 @@
+import './css/styles.css';
+
 (function () {
   console.log('Cookie Script Loaded');
   window.dataLayer = window.dataLayer || [];
-
-  // Function to dynamically load the styles
-  function loadCookieStyles() {
-    const link = document.createElement('link');
-    link.rel = 'stylesheet';
-    link.href = 'https://cookie-consent-for-gtm.pages.dev/cookieStyles.css';
-    document.head.appendChild(link);
-  }
 
   // Function to create the settings modal
   function createSettingsModal() {
@@ -95,7 +89,6 @@
       domainParts.shift(); // Remove the subdomain
       rootDomain = '.' + domainParts.join('.'); // Construct the root domain
     }
-
     // Delete the cookie for the current domain
     document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${location.hostname}`;
 
