@@ -74,9 +74,8 @@ import Cookies from 'js-cookie';
       domainParts.shift();
       rootDomain = domainParts.join('.');
     }
-    // Cookies.remove(name, { path: '/', domain: location.hostname });
+    Cookies.remove(name, { path: '/', domain: location.hostname });
     Cookies.remove(name, { path: '/', domain: rootDomain });
-    // Cookies.remove(name);
   }
 
   // Function to delete cookies by category
