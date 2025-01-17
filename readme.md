@@ -1,4 +1,4 @@
-# Cookie Consent Management Script
+# Cookie Consent Management Script for Google Tag Manager
 
 ## Overview
 
@@ -33,7 +33,7 @@ This script sends events to the `dataLayer` based on user consent preferences:
 
 #### Create GTM Triggers
 
-1.  **Trigger for All Pages View Plus Marketing Accepted:**
+1.  **Example Trigger for All Pages View Plus Marketing Accepted:**
 
     - Go to **Triggers** > **New**.
     - Choose **Trigger Configuration** > **Trigger Group**.
