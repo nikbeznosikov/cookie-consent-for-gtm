@@ -391,8 +391,6 @@ import './css/styles.css';
   // Function to initialize the script
   function initializeCookieScript() {
     console.log('Initializing Cookie Script');
-
-    loadCookieStyles();
     const cookieSettingsSaved = getCookie('cookieSettingsSaved') === 'true';
 
     if (cookieSettingsSaved) {
