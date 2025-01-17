@@ -1,5 +1,7 @@
 (function () {
   console.log('Cookie Script Loaded');
+  window.dataLayer = window.dataLayer || [];
+
   // Function to dynamically load the styles
   function loadCookieStyles() {
     const link = document.createElement('link');
@@ -59,7 +61,8 @@
   function closeSettingsModal() {
     const modal = document.querySelector('.cookie-settings-modal');
     if (modal) modal.remove();
-    location.reload(); // Reload the page
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
   }
 
   // Function to set a cookie
@@ -82,9 +85,22 @@
     return null;
   }
 
-  // Function to delete a cookie
   function deleteCookie(name) {
-    document.cookie = name + '=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    // Get the current domain from the location
+    const domainParts = location.hostname.split('.');
+
+    // Remove the first part of the domain (subdomain) for root domain deletion
+    let rootDomain = location.hostname; // Default to the current domain
+    if (domainParts.length > 2) {
+      domainParts.shift(); // Remove the subdomain
+      rootDomain = '.' + domainParts.join('.'); // Construct the root domain
+    }
+
+    // Delete the cookie for the current domain
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${location.hostname}`;
+
+    // Delete the cookie for the root domain (if applicable)
+    document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/; domain=${rootDomain}`;
   }
 
   // Function to delete cookies by category
@@ -138,6 +154,7 @@
         '_ga',
         '_wingify',
         '_vis',
+        'wingify',
       ],
       marketing: [
         '_fbp',
@@ -148,6 +165,7 @@
         'IDE',
         'test_cookie',
         '__kla_id',
+        '__kla',
         '_lc2_fpi',
         '_li',
         'bscookie',
@@ -235,9 +253,9 @@
 
     logConsent(preferences); // Log consent here
     console.log('Preferences saved');
-    dataLayer.push({ event: 'analytics_' + (analyticsCookies ? 'accepted' : 'rejected') });
-    dataLayer.push({ event: 'marketing_' + (marketingCookies ? 'accepted' : 'rejected') });
-    dataLayer.push({ event: 'functional_' + (functionalCookies ? 'accepted' : 'rejected') });
+    window.dataLayer.push({ event: 'analytics_' + (analyticsCookies ? 'accepted' : 'rejected') });
+    window.dataLayer.push({ event: 'marketing_' + (marketingCookies ? 'accepted' : 'rejected') });
+    window.dataLayer.push({ event: 'functional_' + (functionalCookies ? 'accepted' : 'rejected') });
 
     // Delete cookies by category if not accepted
     if (!analyticsCookies) deleteCookiesByCategory('analytics');
@@ -260,26 +278,25 @@
     };
 
     logConsent(preferences); // Log consent here
-
     if (analyticsCookies) {
       console.log('Analytics cookies enabled');
-      dataLayer.push({ event: 'analytics_accepted' });
+      window.dataLayer.push({ event: 'analytics_accepted' });
     } else {
-      dataLayer.push({ event: 'analytics_rejected' });
+      window.dataLayer.push({ event: 'analytics_rejected' });
     }
 
     if (marketingCookies) {
       console.log('Marketing cookies enabled');
-      dataLayer.push({ event: 'marketing_accepted' });
+      window.dataLayer.push({ event: 'marketing_accepted' });
     } else {
-      dataLayer.push({ event: 'marketing_rejected' });
+      window.dataLayer.push({ event: 'marketing_rejected' });
     }
 
     if (functionalCookies) {
       console.log('Functional cookies enabled');
-      dataLayer.push({ event: 'functional_accepted' });
+      window.dataLayer.push({ event: 'functional_accepted' });
     } else {
-      dataLayer.push({ event: 'functional_rejected' });
+      window.dataLayer.push({ event: 'functional_rejected' });
     }
 
     // Run deleteCookiesByCategory as an interval every 1 second
@@ -289,6 +306,16 @@
       if (!functionalCookies) deleteCookiesByCategory('functional');
     }, 1000);
   }
+
+  setInterval(() => {
+    const analyticsCookies = getCookie('analyticsCookies') === 'true';
+    const marketingCookies = getCookie('marketingCookies') === 'true';
+    const functionalCookies = getCookie('functionalCookies') === 'true';
+
+    if (!analyticsCookies) deleteCookiesByCategory('analytics');
+    if (!marketingCookies) deleteCookiesByCategory('marketing');
+    if (!functionalCookies) deleteCookiesByCategory('functional');
+  }, 1000);
 
   // Function to create the cookie banner
   function createCookieBanner() {
@@ -329,9 +356,9 @@
 
     logConsent(preferences); // Log consent here
     console.log('Cookies Accepted');
-    dataLayer.push({ event: 'analytics_accepted' });
-    dataLayer.push({ event: 'marketing_accepted' });
-    dataLayer.push({ event: 'functional_accepted' });
+    window.dataLayer.push({ event: 'analytics_accepted' });
+    window.dataLayer.push({ event: 'marketing_accepted' });
+    window.dataLayer.push({ event: 'functional_accepted' });
     const banner = document.querySelector('.cookie-banner');
     if (banner) banner.remove();
     createCookieSettingsButton();
@@ -353,9 +380,9 @@
 
     logConsent(preferences); // Log consent here
     console.log('Cookies Rejected');
-    dataLayer.push({ event: 'analytics_rejected' });
-    dataLayer.push({ event: 'marketing_rejected' });
-    dataLayer.push({ event: 'functional_rejected' });
+    window.dataLayer.push({ event: 'analytics_rejected' });
+    window.dataLayer.push({ event: 'marketing_rejected' });
+    window.dataLayer.push({ event: 'functional_rejected' });
 
     // Delete cookies by category
     deleteCookiesByCategory('analytics');
@@ -393,5 +420,10 @@
   window.deleteCookiesByCategory = deleteCookiesByCategory;
 
   // Call the initialization function directly
-  initializeCookieScript();
+  // Ensure the DOM is fully loaded before initializing the script
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initializeCookieScript);
+  } else {
+    initializeCookieScript();
+  }
 })();
