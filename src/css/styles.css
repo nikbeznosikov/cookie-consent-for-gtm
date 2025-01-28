@@ -50,13 +50,13 @@
 }
 
 .cookie-banner .accept-btn {
-  background-color: #28a745;
-  color: white;
+  background: none;
+  text-decoration: underline;
 }
 
 .cookie-banner .reject-btn {
-  background-color: #dc3545;
-  color: white;
+  background: none;
+  text-decoration: underline;
 }
 
 .cookie-banner .settings-btn {
@@ -148,13 +148,13 @@
 }
 
 .cookie-settings-content .save-btn {
-  background: none;
-  text-decoration: underline;
+  background-color: #28a745;
+  color: white;
 }
 
 .cookie-settings-content .close-btn {
-  background: none;
-  text-decoration: underline;
+  background-color: #dc3545;
+  color: white;
 }
 
 .cookie-settings-content button:hover {
