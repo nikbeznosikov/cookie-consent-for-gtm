@@ -148,13 +148,13 @@
 }
 
 .cookie-settings-content .save-btn {
-  background-color: #28a745;
-  color: white;
+  background: none;
+  text-decoration: underline;
 }
 
 .cookie-settings-content .close-btn {
-  background-color: #dc3545;
-  color: white;
+  background: none;
+  text-decoration: underline;
 }
 
 .cookie-settings-content button:hover {
