@@ -69,15 +69,20 @@ import Cookies from 'js-cookie';
   // Function to delete a cookie
   function deleteCookie(name) {
     const domainParts = location.hostname.split('.');
-    let rootDomain = location.hostname;
+    let mainDomain = location.hostname;
+
+    // Get the main domain for cross-subdomain deletion
     if (domainParts.length > 2) {
-      domainParts.shift();
-      rootDomain = domainParts.join('.');
+      mainDomain = '.' + domainParts.slice(-2).join('.');
+    } else {
+      mainDomain = '.' + mainDomain;
     }
 
-    // Delete the cookie from the root domain and the current domain
-    Cookies.remove(name, { path: '/', domain: rootDomain });
-    Cookies.remove(name);
+    // Delete cookie from the current domain
+    Cookies.remove(name, { path: '/' });
+
+    // Delete cookie from the main domain (affects all subdomains)
+    Cookies.remove(name, { path: '/', domain: mainDomain });
   }
 
   // Function to delete cookies by category
@@ -213,10 +218,42 @@ import Cookies from 'js-cookie';
 
   // Function to set cookie preferences
   function setCookiePreferences(preferences) {
-    Cookies.set('analyticsCookies', preferences.analyticsCookies, { expires: 365, path: '/' });
-    Cookies.set('marketingCookies', preferences.marketingCookies, { expires: 365, path: '/' });
-    Cookies.set('functionalCookies', preferences.functionalCookies, { expires: 365, path: '/' });
-    Cookies.set('cookieSettingsSaved', true, { expires: 365, path: '/' });
+    // Get the main domain (without subdomain)
+    const domainParts = location.hostname.split('.');
+    let mainDomain = location.hostname;
+
+    // If we have more than 2 parts (e.g., sub.example.com), get the main domain (example.com)
+    if (domainParts.length > 2) {
+      mainDomain = '.' + domainParts.slice(-2).join('.');
+    } else {
+      // For domains like example.com, add a dot prefix to make it work across subdomains
+      mainDomain = '.' + mainDomain;
+    }
+
+    // Set cookies for the main domain so they work across all subdomains
+    Cookies.set('analyticsCookies', preferences.analyticsCookies, {
+      expires: 365,
+      path: '/',
+      domain: mainDomain,
+    });
+
+    Cookies.set('marketingCookies', preferences.marketingCookies, {
+      expires: 365,
+      path: '/',
+      domain: mainDomain,
+    });
+
+    Cookies.set('functionalCookies', preferences.functionalCookies, {
+      expires: 365,
+      path: '/',
+      domain: mainDomain,
+    });
+
+    Cookies.set('cookieSettingsSaved', true, {
+      expires: 365,
+      path: '/',
+      domain: mainDomain,
+    });
   }
 
   // Function to notify GTM of cookie preferences
